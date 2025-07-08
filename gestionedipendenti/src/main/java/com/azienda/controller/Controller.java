@@ -62,7 +62,7 @@ public class Controller {
 
 		try {
 
-			if (json.has("nome") && json.has("cognome") && json.has("cf") && json.has("data_di_nascita") && json.has("data_di_assunzione") && json.has("stipendio") && json.has("stipendio")) {
+			if (json.has("nome") && json.has("cognome") && json.has("cf") && json.has("data_di_nascita") && json.has("data_di_assunzione") && json.has("stipendio") && json.has("account")) {
 				Dipendente d = dipendenteService.convertJSONDipendenteConAccount(json);
 				dipendenteService.insertDipendenteAccount(d);
 				return new ResponseEntity<>(d, HttpStatus.CREATED);

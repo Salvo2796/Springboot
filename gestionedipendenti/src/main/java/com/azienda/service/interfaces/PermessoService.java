@@ -1,6 +1,5 @@
 package com.azienda.service.interfaces;
 import com.azienda.jpa.entity.Account;
-import com.azienda.jpa.entity.Dipendente;
 import com.azienda.jpa.entity.Permesso;
 import com.azienda.jpa.entity.TipoPermesso;
 

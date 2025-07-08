@@ -1,7 +1,5 @@
 package com.azienda.repository;
 
-import com.azienda.jpa.entity.Account;
-import com.azienda.jpa.entity.Dipendente;
 import com.azienda.jpa.entity.Permesso;
 import com.azienda.jpa.entity.TipoPermesso;
 import org.springframework.data.jpa.repository.JpaRepository;

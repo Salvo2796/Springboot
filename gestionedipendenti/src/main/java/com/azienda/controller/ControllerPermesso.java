@@ -1,8 +1,6 @@
 package com.azienda.controller;
 
 import com.azienda.jpa.entity.Account;
-import com.azienda.jpa.entity.Dipendente;
-import com.azienda.jpa.entity.Permesso;
 import com.azienda.jpa.entity.TipoPermesso;
 import com.azienda.service.interfaces.PermessoService;
 import org.json.JSONObject;
