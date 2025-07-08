@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProgettoServiceImpl implements ProgettoService {
@@ -29,22 +30,26 @@ public class ProgettoServiceImpl implements ProgettoService {
         LocalDate dataFine = LocalDate.parse(j.getString("dataFine"));
         double budget = j.optDouble("budget");
 
-        return new Progetto(nome, descrizione, dataInizio,dataFine,budget,null);
+        return new Progetto(nome, descrizione, dataInizio, dataFine, budget, null);
     }
 
     @Override
-    public Progetto findProgettoByNome(String nome) {
-        return pr.findByNomeContaining(nome);
+    public Optional<Progetto> findByNome(String nome) {
+        return pr.findByNome(nome);
     }
-
 
     @Override
     public List<Progetto> findProgettoByBudget(double budget) {
         return pr.findByBudgetIsGreaterThanEqual(budget);
     }
-
+    
     @Override
-    public void deleteProgetto(Progetto progetto) {
-        pr.delete(progetto);
+    public void deleteProgetto(Optional<Progetto> p) {
+        if (p.isPresent()) {
+             Progetto progetto = p.get();
+            pr.delete(progetto);
+        }
+
     }
+
 }

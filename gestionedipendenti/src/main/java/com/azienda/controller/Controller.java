@@ -20,19 +20,19 @@ import com.azienda.service.interfaces.PermessoService;
 
 @CrossOrigin(origins = "http://localhost:8080", maxAge = 3600)
 @RestController
-@RequestMapping({"crudDipendente"})
+@RequestMapping({ "crudDipendente" })
 public class Controller {
-    @Autowired
-    private DipendenteService dipendenteService;
+	@Autowired
+	private DipendenteService dipendenteService;
 
 	@Autowired
 	private PermessoService permessoService;
 
-    @ResponseBody
-    @RequestMapping(value = "/insertDipendente", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> insertDipendente(@RequestBody String request) {
-        JSONObject json;
-        try {
+	@ResponseBody
+	@RequestMapping(value = "/insertDipendente", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> insertDipendente(@RequestBody String request) {
+		JSONObject json;
+		try {
 			json = new JSONObject(request);
 
 		} catch (Exception e) {
@@ -50,10 +50,11 @@ public class Controller {
 				return new ResponseEntity<>("Campi mancanti", HttpStatus.BAD_REQUEST);
 
 		} catch (Exception e) {
-			return new ResponseEntity<>("Errore durante l'inserimento" + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-		
-    } 
+			return new ResponseEntity<>("Errore durante l'inserimento" + e.getMessage(),
+					HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+	}
 
 	@RequestMapping(value = "/insertDipendenteAccount", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> insertDipendenteAccount(@RequestBody String request) {
@@ -66,7 +67,8 @@ public class Controller {
 
 		try {
 
-			if (json.has("nome") && json.has("cognome") && json.has("cf") && json.has("data_di_nascita") && json.has("data_di_assunzione") && json.has("stipendio")) {
+			if (json.has("nome") && json.has("cognome") && json.has("cf") && json.has("data_di_nascita")
+					&& json.has("data_di_assunzione") && json.has("stipendio")) {
 				Dipendente d = dipendenteService.convertJSONDipendenteConAccount(json);
 				dipendenteService.insertDipendenteAccount(d);
 				return new ResponseEntity<>(d, HttpStatus.CREATED);
@@ -74,34 +76,36 @@ public class Controller {
 				return new ResponseEntity<>("Campi mancanti", HttpStatus.BAD_REQUEST);
 
 		} catch (Exception e) {
-			return new ResponseEntity<>("Errore durante l'inserimento" + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>("Errore durante l'inserimento" + e.getMessage(),
+					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
-    @GetMapping(value = "/findAllDipendente", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/findAllDipendente", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> findAllDipendente() {
 		try {
-            
+
 			List<Dipendente> dipendenti = dipendenteService.findAllDipendente();
 
 			if (dipendenti.isEmpty()) {
-				return new ResponseEntity<>("Dipendente non trovato", HttpStatus.NO_CONTENT); 
+				return new ResponseEntity<>("Dipendente non trovato", HttpStatus.NO_CONTENT);
 
 			} else {
-				return ResponseEntity.ok(dipendenti); 
+				return ResponseEntity.ok(dipendenti);
 			}
 		} catch (Exception e) {
-			return new ResponseEntity<>("Errore durante il recupero dati" + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>("Errore durante il recupero dati" + e.getMessage(),
+					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 	}
 
-    @GetMapping(value= "/findByCf", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> findByCf(@RequestBody String request) {
-        JSONObject json;
+	@GetMapping(value = "/findByCf", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> findByCf(@RequestBody String request) {
+		JSONObject json;
 
 		try {
-			json=new JSONObject(request);
+			json = new JSONObject(request);
 
 		} catch (Exception e) {
 			return new ResponseEntity<>("Formato JSON non valido", HttpStatus.BAD_REQUEST);
@@ -109,34 +113,34 @@ public class Controller {
 
 		try {
 
-			if(json.has("cf")) {
-				Dipendente d=dipendenteService.findByCf(json.getString("cf"));
+			if (json.has("cf")) {
+				Dipendente d = dipendenteService.findByCf(json.getString("cf"));
 
-				if(d!=null)
+				if (d != null)
 					return ResponseEntity.ok(d);
 				else
 					return ResponseEntity.ok("Nessun dipendente presente");
-			}else
+			} else
 				return new ResponseEntity<>("Campi mancanti", HttpStatus.BAD_REQUEST);
 
+		} catch (Exception e) {
+			return new ResponseEntity<>("Errore durante la ricerca cf" + e.getMessage(),
+					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		catch (Exception e) {
-			return new ResponseEntity<>("Errore durante la ricerca cf" + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-    }
+	}
 
 	@GetMapping(value = "/findByStipendio", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> findByStipendio(@RequestBody String request) {
 		JSONObject json;
 
-		try{
-			json=new JSONObject(request);
-		}catch (Exception e) {
+		try {
+			json = new JSONObject(request);
+		} catch (Exception e) {
 			return new ResponseEntity<>("Formato JSON non valido", HttpStatus.BAD_REQUEST);
 		}
 
 		try {
-			if (json.has("stipendio")){
+			if (json.has("stipendio")) {
 				double stipendio = json.getDouble("stipendio");
 				List<Dipendente> dipendenti = dipendenteService.findByStipendio(stipendio);
 
@@ -149,7 +153,8 @@ public class Controller {
 				return new ResponseEntity<>("Campi mancanti", HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
-			return new ResponseEntity<>("Errore durante la ricerca stipendio" + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>("Errore durante la ricerca stipendio" + e.getMessage(),
+					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -157,9 +162,9 @@ public class Controller {
 	public ResponseEntity<?> findByStipendioAndDataDiAssunzione(@RequestBody String request) {
 		JSONObject json;
 
-		try{
-			json=new JSONObject(request);
-		}catch (Exception e) {
+		try {
+			json = new JSONObject(request);
+		} catch (Exception e) {
 			return new ResponseEntity<>("Formato JSON non valido", HttpStatus.BAD_REQUEST);
 		}
 
@@ -170,26 +175,29 @@ public class Controller {
 				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 				LocalDate dataDiAssunzione = LocalDate.parse(json.get("data_di_assunzione").toString(), formatter);
 
-				List<Dipendente> dipendenti = dipendenteService.findByStipendioAndDataDiAssunzione(stipendio, dataDiAssunzione);
+				List<Dipendente> dipendenti = dipendenteService.findByStipendioAndDataDiAssunzione(stipendio,
+						dataDiAssunzione);
 				if (dipendenti.isEmpty()) {
-					return ResponseEntity.status(HttpStatus.OK).body("Nessun dipendente trovato con i criteri specificati");
+					return ResponseEntity.status(HttpStatus.OK)
+							.body("Nessun dipendente trovato con i criteri specificati");
 				} else {
 					return ResponseEntity.ok(dipendenti);
 				}
-			} else{
+			} else {
 				return new ResponseEntity<>("Campi mancanti", HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
-			return new ResponseEntity<>("Errore durante la ricerca stipendio e data di assunzione" + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>("Errore durante la ricerca stipendio e data di assunzione" + e.getMessage(),
+					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	@DeleteMapping(value = "/deleteDipendente", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> deleteDipendente(@RequestBody String request) {
 		JSONObject json;
-		try{
-			json=new JSONObject(request);
-		}catch (Exception e) {
+		try {
+			json = new JSONObject(request);
+		} catch (Exception e) {
 			return new ResponseEntity<>("Formato JSON non valido", HttpStatus.BAD_REQUEST);
 		}
 
@@ -208,87 +216,103 @@ public class Controller {
 				return new ResponseEntity<>("Campi mancanti", HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
-			return new ResponseEntity<>("Errore durante l'eliminazione" + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>("Errore durante l'eliminazione" + e.getMessage(),
+					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	@PutMapping(value = "/updateDipendente/{cf}", produces = MediaType.APPLICATION_JSON_VALUE)
-public ResponseEntity<?> updateDipendente(@PathVariable("cf") String codiceFiscale, @RequestBody String request) {
-    JSONObject json;
-    try {
-        json = new JSONObject(request);
-    } catch (Exception e) {
-        return new ResponseEntity<>("Formato JSON non valido", HttpStatus.BAD_REQUEST);
-    }
+	public ResponseEntity<?> updateDipendente(@PathVariable("cf") String codiceFiscale, @RequestBody String request) {
+		JSONObject json;
+		try {
+			json = new JSONObject(request);
+		} catch (Exception e) {
+			return new ResponseEntity<>("Formato JSON non valido", HttpStatus.BAD_REQUEST);
+		}
 
-    try {
-        Dipendente daAggiornare = dipendenteService.findByCf(codiceFiscale);
+		try {
+			Dipendente daAggiornare = dipendenteService.findByCf(codiceFiscale);
 
-        if (daAggiornare != null) {
+			if (daAggiornare != null) {
 
-            if (json.has("nome"))
-                daAggiornare.setNome(json.getString("nome"));
+				if (json.has("nome"))
+					daAggiornare.setNome(json.getString("nome"));
 
-            if (json.has("cognome"))
-                daAggiornare.setCognome(json.getString("cognome"));
+				if (json.has("cognome"))
+					daAggiornare.setCognome(json.getString("cognome"));
 
-            if (json.has("data_di_nascita")) {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-                daAggiornare.setDataDiNascita(LocalDate.parse(json.getString("data_di_nascita"), formatter));
-            }
+				if (json.has("data_di_nascita")) {
+					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+					daAggiornare.setDataDiNascita(LocalDate.parse(json.getString("data_di_nascita"), formatter));
+				}
 
-            if (json.has("data_di_assunzione")) {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-                daAggiornare.setDataDiAssunzione(LocalDate.parse(json.getString("data_di_assunzione"), formatter));
-            }
+				if (json.has("data_di_assunzione")) {
+					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+					daAggiornare.setDataDiAssunzione(LocalDate.parse(json.getString("data_di_assunzione"), formatter));
+				}
 
-            if (json.has("cf"))
-                daAggiornare.setCf(json.getString("cf"));
+				if (json.has("cf"))
+					daAggiornare.setCf(json.getString("cf"));
 
-            if (json.has("stipendio"))
-                daAggiornare.setStipendio(json.getDouble("stipendio"));
+				if (json.has("stipendio"))
+					daAggiornare.setStipendio(json.getDouble("stipendio"));
 
-            if (json.has("account")) {
-                JSONObject accJ = json.getJSONObject("account");
-                Account account = daAggiornare.getAccount();
+				if (json.has("account")) {
+					JSONObject accJ = json.getJSONObject("account");
+					Account account = daAggiornare.getAccount();
 
-                if (accJ.has("username"))
-                    account.setUsername(accJ.getString("username"));
-                if (accJ.has("pass"))
-                    account.setPass(accJ.getString("pass"));
-                if (accJ.has("email"))
-                    account.setEmail(accJ.getString("email"));
+					if (accJ.has("username"))
+						account.setUsername(accJ.getString("username"));
+					if (accJ.has("pass"))
+						account.setPass(accJ.getString("pass"));
+					if (accJ.has("email"))
+						account.setEmail(accJ.getString("email"));
 
-                if (accJ.has("tipo_di_permesso")) {
-                    String tipoPermessoStr = accJ.getString("tipo_di_permesso").toUpperCase();
+					if (accJ.has("tipo_di_permesso")) {
+						String tipoPermessoStr = accJ.getString("tipo_di_permesso").toUpperCase();
 
-                    try {
-                        TipoPermesso tipoPermesso = TipoPermesso.valueOf(tipoPermessoStr);
-                        List<Permesso> permessi = permessoService.findByPermessoByTipoPermesso(tipoPermesso);
+						try {
+							TipoPermesso tipoPermesso = TipoPermesso.valueOf(tipoPermessoStr);
+							List<Permesso> permessi = permessoService.findByPermessoByTipoPermesso(tipoPermesso);
 
-                        if (permessi != null && !permessi.isEmpty()) {
-                            account.setPermesso(permessi.get(0));
-                        } else {
-                            return new ResponseEntity<>("Permesso non trovato per tipo: " + tipoPermessoStr, HttpStatus.BAD_REQUEST);
-                        }
+							if (permessi != null && !permessi.isEmpty()) {
+								account.setPermesso(permessi.get(0));
+							} else {
+								return new ResponseEntity<>("Permesso non trovato per tipo: " + tipoPermessoStr,
+										HttpStatus.BAD_REQUEST);
+							}
 
-                    } catch (IllegalArgumentException e) {
-                        return new ResponseEntity<>("Tipo di permesso non valido: " + tipoPermessoStr, HttpStatus.BAD_REQUEST);
-                    }
-                }
-            }
+						} catch (IllegalArgumentException e) {
+							return new ResponseEntity<>("Tipo di permesso non valido: " + tipoPermessoStr,
+									HttpStatus.BAD_REQUEST);
+						}
+					}
+				}
 
-            dipendenteService.updateDipendenteAccount(daAggiornare);
-            return ResponseEntity.ok(daAggiornare);
+				dipendenteService.updateDipendenteAccount(daAggiornare);
+				return ResponseEntity.ok(daAggiornare);
 
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Dipendente non trovato");
-        }
+			} else {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Dipendente non trovato");
+			}
 
-    } catch (Exception e) {
-        return new ResponseEntity<>("Errore durante l'aggiornamento: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-}
+		} catch (Exception e) {
+			return new ResponseEntity<>("Errore durante l'aggiornamento: " + e.getMessage(),
+					HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 
-	
+	@PutMapping("/aggiungiProgetto/{cf}/{progetto}")
+	public ResponseEntity<?> aggiungiProgettoDipendente(@PathVariable("cf") String cf,@PathVariable("progetto") String nomeProgetto) {
+
+		try {
+			Dipendente dipendenteAggiornato = dipendenteService.aggiungiProgettoADipendenteByCf(cf, nomeProgetto);
+			return new ResponseEntity<>(dipendenteAggiornato, HttpStatus.OK);
+		} catch (RuntimeException e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+		} catch (Exception e) {
+			return new ResponseEntity<>("Errore interno: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
 }

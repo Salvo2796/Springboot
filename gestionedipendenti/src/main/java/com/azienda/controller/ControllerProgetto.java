@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin(origins = "http://localhost:8080", maxAge = 3600)
 @RestController
@@ -55,7 +56,7 @@ public class ControllerProgetto {
 
         try {
             if (json.has("nome")){
-                Progetto p = progettoService.findProgettoByNome(json.getString("nome"));
+                Optional<Progetto> p = progettoService.findByNome(json.getString("nome"));
                 if (p != null)
                     return new ResponseEntity<>(p, HttpStatus.OK);
                 else
@@ -107,7 +108,7 @@ public class ControllerProgetto {
         try{
             if (json.has("nome")) {
                 String nome = json.getString("nome");
-                Progetto p = progettoService.findProgettoByNome(nome);
+                Optional<Progetto> p = progettoService.findByNome(nome);
                 progettoService.deleteProgetto(p);
                 return new ResponseEntity<>(p, HttpStatus.OK);
             } else
@@ -117,4 +118,6 @@ public class ControllerProgetto {
             return new ResponseEntity<>("Errore durante l'inserimento" + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    
 }

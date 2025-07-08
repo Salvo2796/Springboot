@@ -32,4 +32,6 @@ public interface DipendenteService {
 
     public void updateDipendenteAccount(Dipendente d);
 
+    Dipendente aggiungiProgettoADipendenteByCf(String cf, String nomeProgetto);
+
 }

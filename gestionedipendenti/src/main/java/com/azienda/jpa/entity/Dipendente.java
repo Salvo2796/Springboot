@@ -138,9 +138,9 @@ public class Dipendente {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(id, nome, cognome, cf, dataDiNascita, dataDiAssunzione, stipendio, account, progetti);
-    }
+public int hashCode() {
+    return Objects.hash(cf);  // usa solo il codice fiscale o altro identificatore unico
+}
 
     @Override
     public String toString() {

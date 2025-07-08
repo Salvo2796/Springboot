@@ -100,9 +100,10 @@ public class Account {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(id, username, pass, email, dipendente, permesso);
-    }
+public int hashCode() {
+    return Objects.hash(username);  // o id, o un campo identificativo
+}
+
 
     @Override
     public String toString() {
