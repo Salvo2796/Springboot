@@ -5,6 +5,7 @@ import com.azienda.jpa.entity.Dipendente;
 import com.azienda.jpa.entity.Permesso;
 import com.azienda.jpa.entity.TipoPermesso;
 import com.azienda.service.interfaces.AccountService;
+import com.azienda.service.interfaces.PermessoService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,9 @@ public class ControllerAccount {
 
     @Autowired
     private AccountService accountService;
+
+    @Autowired
+    private PermessoService permessoService;
 
     @ResponseBody
     @RequestMapping(value = "/insertAccount", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -122,72 +126,83 @@ public class ControllerAccount {
     }
 
     @PutMapping(value = "/updateAccount/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> updateAccount(@PathVariable String email, @RequestBody String request) {
-        JSONObject json;
-        try {
-            json = new JSONObject(request);
-        } catch (Exception e) {
-            return new ResponseEntity<>("Formato JSON non valido", HttpStatus.BAD_REQUEST);
-        }
+public ResponseEntity<?> updateAccount(@PathVariable String email, @RequestBody String request) {
+    JSONObject json;
+    try {
+        json = new JSONObject(request);
+    } catch (Exception e) {
+        return new ResponseEntity<>("Formato JSON non valido", HttpStatus.BAD_REQUEST);
+    }
 
-        try {
-            Account acc = accountService.findByEmail(email);
-            if (acc != null) {
-                if (json.has("username"))
-                    acc.setUsername(json.getString("username"));
-                if (json.has("email"))
-                    acc.setEmail(json.getString("email"));
-                if (json.has("pass"))
-                    acc.setPass(json.getString("pass"));
+    try {
+        Account acc = accountService.findByEmail(email);
+        if (acc != null) {
+            if (json.has("username"))
+                acc.setUsername(json.getString("username"));
 
-                if (json.has("tipo_di_permesso")) {
-                    String tipoPermessoStr = json.getString("tipo_di_permesso").toUpperCase();
-                    TipoPermesso tipoPermesso;
-                    try {
-                        tipoPermesso = TipoPermesso.valueOf(tipoPermessoStr);
-                    } catch (IllegalArgumentException e) {
-                        return new ResponseEntity<>("Tipo di permesso non valido", HttpStatus.BAD_REQUEST);
+            if (json.has("email"))
+                acc.setEmail(json.getString("email"));
+
+            if (json.has("pass"))
+                acc.setPass(json.getString("pass"));
+
+            if (json.has("tipo_di_permesso")) {
+                String tipoPermessoStr = json.getString("tipo_di_permesso").toUpperCase();
+                try {
+                    TipoPermesso tipoPermesso = TipoPermesso.valueOf(tipoPermessoStr);
+
+                    List<Permesso> permessi = permessoService.findByPermessoByTipoPermesso(tipoPermesso);
+                    if (permessi != null && !permessi.isEmpty()) {
+                        acc.setPermesso(permessi.get(0)); 
+                    } else {
+                        return new ResponseEntity<>("Permesso non trovato per tipo: " + tipoPermessoStr, HttpStatus.BAD_REQUEST);
                     }
 
-                    Permesso permesso = new Permesso(tipoPermesso);
-                    acc.setPermesso(permesso);
+                } catch (IllegalArgumentException e) {
+                    return new ResponseEntity<>("Tipo di permesso non valido", HttpStatus.BAD_REQUEST);
+                }
+            }
+
+            if (json.has("dipendente")) {
+                JSONObject dipJ = json.getJSONObject("dipendente");
+                Dipendente dipendente = acc.getDipendente();
+
+                if (dipendente == null) {
+                    return new ResponseEntity<>("Dipendente non associato a questo account", HttpStatus.BAD_REQUEST);
                 }
 
-                if(json.has("dipendente")) {
+                if (dipJ.has("nome"))
+                    dipendente.setNome(dipJ.getString("nome"));
 
-                    JSONObject dipJ = json.getJSONObject("dipendente");
-                    Dipendente dipendente = acc.getDipendente();
-                    
-                    if (dipJ.has("nome")) 
-                        dipendente.setNome(dipJ.getString("nome"));
-                    
-                    if (dipJ.has("cognome")) 
-                        dipendente.setCognome(dipJ.getString("cognome"));
-                    
-                    if (json.has("data_di_nascita")) {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-                dipendente.setDataDiNascita(LocalDate.parse(json.get("data_di_nascita").toString(), formatter));
+                if (dipJ.has("cognome"))
+                    dipendente.setCognome(dipJ.getString("cognome"));
+
+                if (dipJ.has("data_di_nascita")) {
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                    dipendente.setDataDiNascita(LocalDate.parse(dipJ.getString("data_di_nascita"), formatter));
+                }
+
+                if (dipJ.has("data_di_assunzione")) {
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                    dipendente.setDataDiAssunzione(LocalDate.parse(dipJ.getString("data_di_assunzione"), formatter));
+                }
+
+                if (dipJ.has("cf"))
+                    dipendente.setCf(dipJ.getString("cf"));
+
+                if (dipJ.has("stipendio"))
+                    dipendente.setStipendio(dipJ.getDouble("stipendio"));
             }
 
-            if (json.has("data_di_assunzione")) {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-                dipendente.setDataDiAssunzione(LocalDate.parse(json.get("data_di_assunzione").toString(), formatter));
-            }
-
-            if (json.has("cf"))
-                dipendente.setCf(json.getString("cf"));
-
-            if (json.has("stipendio"))
-                dipendente.setStipendio(json.getDouble("stipendio"));
-            }
-                accountService.updateAccount(acc);
-                return ResponseEntity.ok("Account aggiornato");
-            } else {
-                return ResponseEntity.ok("Nessun account presente");
-            }
-        } catch (Exception e) {
-            return new ResponseEntity<>("Errore durante l'update dell'account" + e.getMessage(),
-                    HttpStatus.INTERNAL_SERVER_ERROR);
+            accountService.updateAccount(acc);
+            return ResponseEntity.ok("Account aggiornato");
+        } else {
+            return new ResponseEntity<>("Account non trovato", HttpStatus.NOT_FOUND);
         }
+
+    } catch (Exception e) {
+        return new ResponseEntity<>("Errore durante l'update dell'account: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
+}
+
 }
