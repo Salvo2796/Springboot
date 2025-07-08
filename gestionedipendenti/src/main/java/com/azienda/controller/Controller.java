@@ -289,6 +289,7 @@ public class Controller {
 					}
 				}
 
+
 				dipendenteService.updateDipendenteAccount(daAggiornare);
 				return ResponseEntity.ok(daAggiornare);
 
@@ -314,5 +315,4 @@ public class Controller {
 			return new ResponseEntity<>("Errore interno: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-
 }

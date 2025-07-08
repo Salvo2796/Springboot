@@ -1,5 +1,6 @@
 package com.azienda.controller;
 
+import com.azienda.jpa.entity.Dipendente;
 import com.azienda.jpa.entity.Progetto;
 import com.azienda.service.interfaces.ProgettoService;
 import org.json.JSONObject;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @CrossOrigin(origins = "http://localhost:8080", maxAge = 3600)
 @RestController
@@ -57,8 +59,9 @@ public class ControllerProgetto {
         try {
             if (json.has("nome")){
                 Optional<Progetto> p = progettoService.findByNome(json.getString("nome"));
+                Set<Dipendente> d = p.get().getDipendenti();
                 if (p != null)
-                    return new ResponseEntity<>(p, HttpStatus.OK);
+                    return new ResponseEntity<>(d, HttpStatus.OK);
                 else
                     return new ResponseEntity<>("Progetto non trovato", HttpStatus.NOT_FOUND);
             } else

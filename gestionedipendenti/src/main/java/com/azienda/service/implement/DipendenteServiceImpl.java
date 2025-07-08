@@ -6,9 +6,7 @@ import com.azienda.jpa.entity.Progetto;
 import com.azienda.jpa.entity.TipoPermesso;
 import com.azienda.service.interfaces.PermessoService;
 import com.azienda.service.interfaces.ProgettoService;
-
 import jakarta.transaction.Transactional;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
