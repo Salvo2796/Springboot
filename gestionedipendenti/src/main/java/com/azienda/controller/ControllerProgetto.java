@@ -60,10 +60,7 @@ public class ControllerProgetto {
             if (json.has("nome")){
                 Optional<Progetto> p = progettoService.findByNome(json.getString("nome"));
                 Set<Dipendente> d = p.get().getDipendenti();
-                if (p != null)
-                    return new ResponseEntity<>(d, HttpStatus.OK);
-                else
-                    return new ResponseEntity<>("Progetto non trovato", HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>(d, HttpStatus.OK);
             } else
                 return new ResponseEntity<>("Campi mancanti", HttpStatus.BAD_REQUEST);
 
