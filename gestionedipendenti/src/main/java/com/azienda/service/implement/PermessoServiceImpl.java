@@ -17,8 +17,8 @@ public class PermessoServiceImpl implements PermessoService {
     private PermessoRepository permessoRepository;
 
     @Override
-    public List<Permesso> findByPermessoByTipoPermesso(TipoPermesso tipoPermesso) {
-        return permessoRepository.findPermessoByTipoPermesso(tipoPermesso);
+    public Permesso findByTipoPermesso(TipoPermesso tipoPermesso) {
+        return permessoRepository.findByTipoPermesso(tipoPermesso);
     }
 
     @Override

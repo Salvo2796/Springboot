@@ -9,7 +9,7 @@ public interface PermessoService {
 
     public Permesso savePermesso(Permesso permesso);
 
-    public List<Permesso> findByPermessoByTipoPermesso(TipoPermesso tipoPermesso);
+    Permesso findByTipoPermesso(TipoPermesso tipoPermesso);
 
     public List<Account> findDipendenteByPermesso(TipoPermesso tipoPermesso);
 

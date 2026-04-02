@@ -1,5 +1,6 @@
 package com.azienda.service.implement;
 
+import com.azienda.jpa.entity.Dipendente;
 import com.azienda.jpa.entity.Progetto;
 import com.azienda.repository.ProgettoRepository;
 import com.azienda.service.interfaces.ProgettoService;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,6 +35,20 @@ public class ProgettoServiceImpl implements ProgettoService {
         return new Progetto(nome, descrizione, dataInizio, dataFine, budget, null);
     }
 
+    public void collegaDipendenteProgetto(Dipendente dipendente, Progetto progetto) {
+
+        if (dipendente.getProgetti() == null) {
+            dipendente.setProgetti(new HashSet<>());
+        }
+
+        if (progetto.getDipendenti() == null) {
+            progetto.setDipendenti(new HashSet<>());
+        }
+
+        dipendente.getProgetti().add(progetto);
+        progetto.getDipendenti().add(dipendente);
+    }
+
     @Override
     public Optional<Progetto> findByNome(String nome) {
         return pr.findByNome(nome);
@@ -42,11 +58,11 @@ public class ProgettoServiceImpl implements ProgettoService {
     public List<Progetto> findProgettoByBudget(double budget) {
         return pr.findByBudgetIsGreaterThanEqual(budget);
     }
-    
+
     @Override
     public void deleteProgetto(Optional<Progetto> p) {
         if (p.isPresent()) {
-             Progetto progetto = p.get();
+            Progetto progetto = p.get();
             pr.delete(progetto);
         }
 

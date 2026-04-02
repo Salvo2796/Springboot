@@ -17,8 +17,6 @@ Applicazione backend sviluppata con Java e Spring Boot per la gestione dei dipen
 3. Avviare l'applicazione con:
    mvn spring-boot:run
 
-L'app sarà disponibile su:
-http://localhost:8080
 
 ## 🗄️ Accesso al database H2
 Aprire il browser e andare su:
@@ -65,6 +63,8 @@ Inserire i seguenti dati:
 
 # PROGETTO
 - POST /crudProgetto/insertProgetto → Inserisce un nuovo progetto.
+
+- POST /aggiungiProgettoADipendente → Abbina un progetto ad un dipendente
 
 - GET /crudProgetto/findByName → Cerca un progetto tramite nome e restituisce i dipendenti associati.
 

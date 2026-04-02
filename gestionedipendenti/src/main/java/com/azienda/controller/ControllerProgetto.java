@@ -2,6 +2,7 @@ package com.azienda.controller;
 
 import com.azienda.jpa.entity.Dipendente;
 import com.azienda.jpa.entity.Progetto;
+import com.azienda.service.interfaces.DipendenteService;
 import com.azienda.service.interfaces.ProgettoService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +17,14 @@ import java.util.Set;
 
 @CrossOrigin(origins = "http://localhost:8080", maxAge = 3600)
 @RestController
-@RequestMapping({"crudProgetto"})
+@RequestMapping({ "crudProgetto" })
 public class ControllerProgetto {
 
     @Autowired
     private ProgettoService progettoService;
+
+    @Autowired
+    private DipendenteService dipendenteService;
 
     @ResponseBody
     @RequestMapping(value = "/insertProgetto", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -42,11 +46,12 @@ public class ControllerProgetto {
                 return new ResponseEntity<>("Campi mancanti", HttpStatus.BAD_REQUEST);
 
         } catch (Exception e) {
-            return new ResponseEntity<>("Errore durante l'inserimento" + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Errore durante l'inserimento" + e.getMessage(),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @GetMapping(value = "/findByName" , produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/findByName", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> findByNome(@RequestBody String request) {
         JSONObject json;
         try {
@@ -57,7 +62,7 @@ public class ControllerProgetto {
         }
 
         try {
-            if (json.has("nome")){
+            if (json.has("nome")) {
                 Optional<Progetto> p = progettoService.findByNome(json.getString("nome"));
                 Set<Dipendente> d = p.get().getDipendenti();
                 return new ResponseEntity<>(d, HttpStatus.OK);
@@ -65,11 +70,12 @@ public class ControllerProgetto {
                 return new ResponseEntity<>("Campi mancanti", HttpStatus.BAD_REQUEST);
 
         } catch (Exception e) {
-            return new ResponseEntity<>("Errore durante l'inserimento" + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Errore durante l'inserimento" + e.getMessage(),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @GetMapping(value = "/findByBudget" , produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/findByBudget", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> findByBudget(@RequestBody String request) {
         JSONObject json;
         try {
@@ -80,7 +86,7 @@ public class ControllerProgetto {
         }
 
         try {
-            if (json.has("budget")){
+            if (json.has("budget")) {
                 double budget = json.getDouble("budget");
                 List<Progetto> p = progettoService.findProgettoByBudget(budget);
                 if (p.size() > 0)
@@ -91,7 +97,8 @@ public class ControllerProgetto {
                 return new ResponseEntity<>("Campi mancanti", HttpStatus.BAD_REQUEST);
 
         } catch (Exception e) {
-            return new ResponseEntity<>("Errore durante l'inserimento" + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Errore durante l'inserimento" + e.getMessage(),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }
@@ -105,7 +112,7 @@ public class ControllerProgetto {
         } catch (Exception e) {
             return new ResponseEntity<>("Formato JSON non valido", HttpStatus.BAD_REQUEST);
         }
-        try{
+        try {
             if (json.has("nome")) {
                 String nome = json.getString("nome");
                 Optional<Progetto> p = progettoService.findByNome(nome);
@@ -115,9 +122,34 @@ public class ControllerProgetto {
                 return new ResponseEntity<>("Campi mancanti", HttpStatus.BAD_REQUEST);
 
         } catch (Exception e) {
-            return new ResponseEntity<>("Errore durante l'inserimento" + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Errore durante l'inserimento" + e.getMessage(),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    
+    @ResponseBody
+    @RequestMapping(value = "/aggiungiProgettoADipendente", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> aggiungiProgetto(@RequestBody String request) {
+
+        try {
+            JSONObject json = new JSONObject(request);
+
+            if (!json.has("cf") || !json.has("nomeProgetto")) {
+                return new ResponseEntity<>("Campi mancanti", HttpStatus.BAD_REQUEST);
+            }
+
+            String cf = json.getString("cf");
+            String nomeProgetto = json.getString("nomeProgetto");
+
+            Dipendente aggiornato = dipendenteService.aggiungiProgettoADipendenteByCf(cf, nomeProgetto);
+
+            return new ResponseEntity<>(aggiornato, HttpStatus.OK);
+
+        } catch (Exception e) {
+            return new ResponseEntity<>(
+                    "Errore: " + e.getMessage(),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }

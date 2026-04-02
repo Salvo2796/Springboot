@@ -39,7 +39,7 @@ public class AccountServiceImpl implements AccountService {
             String tipoPermessoStr = j.getString("tipo_di_permesso").toUpperCase();
             try {
                 TipoPermesso tipoPermesso = TipoPermesso.valueOf(tipoPermessoStr);
-                permesso = new Permesso(tipoPermesso);  // Creo permesso direttamente (senza DB qui)
+                permesso = new Permesso(tipoPermesso); // Creo permesso direttamente (senza DB qui)
             } catch (IllegalArgumentException e) {
                 throw new RuntimeException("Tipo di permesso non valido: " + tipoPermessoStr);
             }
@@ -48,7 +48,6 @@ public class AccountServiceImpl implements AccountService {
         // Creo e ritorno l'Account
         return new Account(username, pass, email, null, permesso);
     }
-
 
     @Override
     public List<Account> findAllAccount() {
@@ -76,7 +75,8 @@ public class AccountServiceImpl implements AccountService {
         String pass = j.getString("pass");
         String email = j.getString("email");
 
-        Account account = new Account(username, pass, email, null,null);//Metto null perchè il dipendente lo creo dopo,quindi lo settiamo dopo
+        Account account = new Account(username, pass, email, null, null);// Metto null perchè il dipendente lo creo
+                                                                         // dopo,quindi lo settiamo dopo
 
         if (j.has("dipendente")) {
             JSONObject d = j.getJSONObject("dipendente");
@@ -90,13 +90,14 @@ public class AccountServiceImpl implements AccountService {
             LocalDate dataDiAssunzione = LocalDate.parse(d.getString("data_di_assunzione"), formatter);
             double stipendio = d.getDouble("stipendio");
 
-            Dipendente dipendente = new Dipendente(nome, cognome, cf, dataDiNascita, dataDiAssunzione, stipendio,account,null);
+            Dipendente dipendente = new Dipendente(nome, cognome, cf, dataDiNascita, dataDiAssunzione, stipendio,
+                    account, null);
 
             // Collego l'account al dipendente
             if (dipendente != null) {
                 account.setDipendente(dipendente);
             }
-            
+
         }
 
         if (j.has("tipo_di_permesso")) {
@@ -111,7 +112,6 @@ public class AccountServiceImpl implements AccountService {
             }
         }
 
-
         return account;
 
     }
@@ -121,24 +121,22 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account createAccountWithPermesso(Account account) {
+
         if (account.getPermesso() != null) {
+
             TipoPermesso tipoPermesso = account.getPermesso().getTipoPermesso();
 
-            // Cerca il permesso esistente nel DB
-            List<Permesso> permessi = permessoService.findByPermessoByTipoPermesso(tipoPermesso);
+            Permesso permesso = permessoService.findByTipoPermesso(tipoPermesso);
 
-            if (!permessi.isEmpty()) {
-                account.setPermesso(permessi.get(0));  // usa quello trovato
-            } else {
-                // se non esiste, crealo e salvalo
-                Permesso nuovoPermesso = new Permesso(tipoPermesso);
-                permessoService.savePermesso(nuovoPermesso);
-                account.setPermesso(nuovoPermesso);
+            if (permesso == null) {
+                permesso = new Permesso(tipoPermesso);
+                permessoService.savePermesso(permesso);
             }
+
+            account.setPermesso(permesso);
         }
 
         return ar.save(account);
     }
-
 
 }

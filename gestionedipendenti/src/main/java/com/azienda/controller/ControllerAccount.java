@@ -43,6 +43,7 @@ public class ControllerAccount {
                 Account account = accountService.convertJSONAccountConDipendente(json);
 
                 Account savedAccount = accountService.createAccountWithPermesso(account);
+                
 
                 return new ResponseEntity<>(savedAccount, HttpStatus.CREATED);
             } else {
@@ -151,9 +152,9 @@ public ResponseEntity<?> updateAccount(@PathVariable String email, @RequestBody 
                 try {
                     TipoPermesso tipoPermesso = TipoPermesso.valueOf(tipoPermessoStr);
 
-                    List<Permesso> permessi = permessoService.findByPermessoByTipoPermesso(tipoPermesso);
-                    if (permessi != null && !permessi.isEmpty()) {
-                        acc.setPermesso(permessi.get(0)); 
+                    Permesso permessi = permessoService.findByTipoPermesso(tipoPermesso);
+                    if (permessi != null) {
+                        acc.setPermesso(permessi); 
                     } else {
                         return new ResponseEntity<>("Permesso non trovato per tipo: " + tipoPermessoStr, HttpStatus.BAD_REQUEST);
                     }

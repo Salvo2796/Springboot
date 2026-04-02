@@ -110,9 +110,9 @@ public class DipendenteServiceImpl implements DipendenteService {
             if (accJ.has("tipo_di_permesso")) {
                 String tipoPermessoStr = accJ.getString("tipo_di_permesso").toUpperCase();
                 TipoPermesso tipoPermesso = TipoPermesso.valueOf(tipoPermessoStr);
-                List<Permesso> permessi = permessoService.findByPermessoByTipoPermesso(tipoPermesso);
-                if (permessi != null && !permessi.isEmpty()) {
-                    permesso = permessi.get(0);
+                Permesso permessi = permessoService.findByTipoPermesso(tipoPermesso);
+                if (permessi != null) {
+                    permesso = permessi;
                 } else {
                     throw new RuntimeException("Permesso non trovato: " + tipoPermessoStr);
                 }

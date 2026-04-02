@@ -32,16 +32,14 @@ public class Progetto {
 
     @JsonIgnore
     @ManyToMany
-    @JoinTable(
-            name = "partecipazioni",
-            joinColumns = @JoinColumn(name = "progetto_id"),
-            inverseJoinColumns = @JoinColumn(name = "dipendente_id")
-    )
+    @JoinTable(name = "partecipazioni", joinColumns = @JoinColumn(name = "progetto_id"), inverseJoinColumns = @JoinColumn(name = "dipendente_id"))
     private Set<Dipendente> dipendenti = new HashSet<>();
 
-    public Progetto() {}
+    public Progetto() {
+    }
 
-    public Progetto(String nome, String descrizione, LocalDate dataInizio, LocalDate dataFine, double budget, Set<Dipendente> dipendenti) {
+    public Progetto(String nome, String descrizione, LocalDate dataInizio, LocalDate dataFine, double budget,
+            Set<Dipendente> dipendenti) {
         this.nome = nome;
         this.descrizione = descrizione;
         this.dataInizio = dataInizio;
@@ -107,18 +105,6 @@ public class Progetto {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Progetto progetto = (Progetto) o;
-        return id == progetto.id && Double.compare(budget, progetto.budget) == 0 && Objects.equals(nome, progetto.nome) && Objects.equals(descrizione, progetto.descrizione) && Objects.equals(dataInizio, progetto.dataInizio) && Objects.equals(dataFine, progetto.dataFine) && Objects.equals(dipendenti, progetto.dipendenti);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, nome, descrizione, dataInizio, dataFine, budget, dipendenti);
-    }
-
-    @Override
     public String toString() {
         return "Progetto{" +
                 "id=" + id +
@@ -129,5 +115,20 @@ public class Progetto {
                 ", budget=" + budget +
                 ", dipendenti=" + dipendenti +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Progetto progetto = (Progetto) o;
+        return Objects.equals(nome, progetto.nome);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(nome);
     }
 }

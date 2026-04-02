@@ -273,10 +273,10 @@ public class Controller {
 
 						try {
 							TipoPermesso tipoPermesso = TipoPermesso.valueOf(tipoPermessoStr);
-							List<Permesso> permessi = permessoService.findByPermessoByTipoPermesso(tipoPermesso);
+							Permesso permessi = permessoService.findByTipoPermesso(tipoPermesso);
 
-							if (permessi != null && !permessi.isEmpty()) {
-								account.setPermesso(permessi.get(0));
+							if (permessi != null) {
+								account.setPermesso(permessi);
 							} else {
 								return new ResponseEntity<>("Permesso non trovato per tipo: " + tipoPermessoStr,
 										HttpStatus.BAD_REQUEST);
