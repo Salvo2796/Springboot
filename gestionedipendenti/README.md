@@ -1,31 +1,55 @@
-# Gestione Dipendenti - Spring Boot
+# Gestione Dipendenti - Spring Boot + MySQL + Docker
 
-## 📌 Descrizione
-Applicazione backend sviluppata con Java e Spring Boot per la gestione dei dipendenti tramite API REST.
+Applicazione Spring Boot per la gestione dei dipendenti, containerizzata con Docker e integrata con MySQL e phpMyAdmin.
 
-## 🚀 Tecnologie utilizzate
-- Java
+---
+
+## 🧱 Tecnologie utilizzate
+
+- Java 17
 - Spring Boot
 - Spring Data JPA
-- H2 Database (in-memory)
-- REST API
+- MySQL 8
+- Docker & Docker Compose
+- phpMyAdmin
+
+---
+
+## 🚀 Avvio del progetto
+
+### 1. Prerequisiti
+
+- Docker Desktop (avviato)
+- Java 17
 - Maven
 
-## ▶️ Come avviare il progetto
-1. Clonare il repository
-2. Aprire il progetto
-3. Avviare l'applicazione con:
-   mvn spring-boot:run
+---
 
+### 2. Build del progetto
 
-## 🗄️ Accesso al database H2
-Aprire il browser e andare su:
-http://localhost:8080/h2-console
+Prima di avviare Docker, genera il `.jar`:
+```bash
+mvn clean package
+```
 
-Inserire i seguenti dati:
-- JDBC URL: jdbc:h2:mem:testdb
-- User: sa
-- Password: (vuoto)
+---
+
+### 3. Avvio con Docker
+```bash
+docker compose up --build
+```
+
+---
+
+### Accesso ai servizi
+```bash
+Servizio	         URL
+Spring Boot	      http://localhost:8080
+
+phpMyAdmin	      http://localhost:8081 -> Username: root Password: root
+```
+
+---
 
 ## 📡 API disponibili
 # Dipendente
