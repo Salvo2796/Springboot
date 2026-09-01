@@ -7,7 +7,6 @@ import com.azienda.jpa.entity.TipoPermesso;
 import com.azienda.service.interfaces.AccountService;
 import com.azienda.service.interfaces.PermessoService;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,11 +21,14 @@ import java.util.List;
 @RequestMapping({ "crudAccount" })
 public class ControllerAccount {
 
-    @Autowired
-    private AccountService accountService;
+    private final AccountService accountService;
 
-    @Autowired
-    private PermessoService permessoService;
+    private final PermessoService permessoService;
+
+    ControllerAccount(AccountService accountService, PermessoService permessoService) {
+        this.accountService = accountService;
+        this.permessoService = permessoService;
+    }
 
     @ResponseBody
     @RequestMapping(value = "/insertAccount", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)

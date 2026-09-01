@@ -8,9 +8,7 @@ import com.azienda.repository.AccountRepository;
 import com.azienda.service.interfaces.AccountService;
 import com.azienda.service.interfaces.PermessoService;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -18,8 +16,12 @@ import java.util.List;
 @Service
 public class AccountServiceImpl implements AccountService {
 
-    @Autowired
-    private AccountRepository ar;
+    private final AccountRepository ar;
+
+    AccountServiceImpl(AccountRepository ar, PermessoService permessoService) {
+        this.ar = ar;
+        this.permessoService = permessoService;
+    }
 
     @Override
     public void insertAccount(Account a) {
@@ -116,8 +118,7 @@ public class AccountServiceImpl implements AccountService {
 
     }
 
-    @Autowired
-    private PermessoService permessoService;
+    private final PermessoService permessoService;
 
     @Override
     public Account createAccountWithPermesso(Account account) {

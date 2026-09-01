@@ -5,7 +5,6 @@ import com.azienda.jpa.entity.Permesso;
 import com.azienda.jpa.entity.TipoPermesso;
 import com.azienda.repository.PermessoRepository;
 import com.azienda.service.interfaces.PermessoService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,8 +12,11 @@ import java.util.List;
 @Service
 public class PermessoServiceImpl implements PermessoService {
 
-    @Autowired
-    private PermessoRepository permessoRepository;
+    private final PermessoRepository permessoRepository;
+
+    PermessoServiceImpl(PermessoRepository permessoRepository) {
+        this.permessoRepository = permessoRepository;
+    }
 
     @Override
     public Permesso findByTipoPermesso(TipoPermesso tipoPermesso) {

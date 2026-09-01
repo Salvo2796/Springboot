@@ -5,7 +5,6 @@ import com.azienda.jpa.entity.Progetto;
 import com.azienda.service.interfaces.DipendenteService;
 import com.azienda.service.interfaces.ProgettoService;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,11 +19,14 @@ import java.util.Set;
 @RequestMapping({ "crudProgetto" })
 public class ControllerProgetto {
 
-    @Autowired
-    private ProgettoService progettoService;
+    private final ProgettoService progettoService;
 
-    @Autowired
-    private DipendenteService dipendenteService;
+    private final DipendenteService dipendenteService;
+
+    ControllerProgetto(ProgettoService progettoService, DipendenteService dipendenteService) {
+        this.progettoService = progettoService;
+        this.dipendenteService = dipendenteService;
+    }
 
     @ResponseBody
     @RequestMapping(value = "/insertProgetto", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)

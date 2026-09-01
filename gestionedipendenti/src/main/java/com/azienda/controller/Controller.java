@@ -8,7 +8,6 @@ import com.azienda.jpa.entity.Account;
 import com.azienda.jpa.entity.Permesso;
 import com.azienda.jpa.entity.TipoPermesso;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,11 +21,14 @@ import com.azienda.service.interfaces.PermessoService;
 @RestController
 @RequestMapping({ "crudDipendente" })
 public class Controller {
-	@Autowired
-	private DipendenteService dipendenteService;
+	private final DipendenteService dipendenteService;
 
-	@Autowired
-	private PermessoService permessoService;
+	private final PermessoService permessoService;
+
+	Controller(DipendenteService dipendenteService, PermessoService permessoService) {
+		this.dipendenteService = dipendenteService;
+		this.permessoService = permessoService;
+	}
 
 	@ResponseBody
 	@RequestMapping(value = "/insertDipendente", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)

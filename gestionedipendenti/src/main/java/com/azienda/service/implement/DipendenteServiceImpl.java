@@ -9,7 +9,6 @@ import com.azienda.service.interfaces.ProgettoService;
 import jakarta.transaction.Transactional;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.azienda.jpa.entity.Dipendente;
 import com.azienda.repository.DipendenteRepository;
@@ -22,14 +21,17 @@ import java.util.Optional;
 
 @Service
 public class DipendenteServiceImpl implements DipendenteService {
-    @Autowired
-    private DipendenteRepository dr;
+    private final DipendenteRepository dr;
 
-    @Autowired
-    private PermessoService permessoService;
+    private final PermessoService permessoService;
 
-    @Autowired
-    private ProgettoService progettoService;
+    private final ProgettoService progettoService;
+
+    DipendenteServiceImpl(DipendenteRepository dr, PermessoService permessoService, ProgettoService progettoService) {
+        this.dr = dr;
+        this.permessoService = permessoService;
+        this.progettoService = progettoService;
+    }
 
     @Transactional
     @Override

@@ -5,9 +5,7 @@ import com.azienda.jpa.entity.Progetto;
 import com.azienda.repository.ProgettoRepository;
 import com.azienda.service.interfaces.ProgettoService;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
@@ -16,8 +14,11 @@ import java.util.Optional;
 @Service
 public class ProgettoServiceImpl implements ProgettoService {
 
-    @Autowired
-    private ProgettoRepository pr;
+    private final ProgettoRepository pr;
+
+    ProgettoServiceImpl(ProgettoRepository pr) {
+        this.pr = pr;
+    }
 
     @Override
     public void insertProgetto(Progetto progetto) {

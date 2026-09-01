@@ -1,6 +1,6 @@
 # Gestione Dipendenti - Spring Boot + MySQL + Docker
 
-Applicazione Spring Boot per la gestione dei dipendenti, containerizzata con Docker e integrata con MySQL e phpMyAdmin.
+Applicazione Spring Boot per la gestione dei dipendenti, containerizzata con Docker e integrata con MySQL, phpMyAdmin, Prometheus e Grafana per il monitoring.
 
 ---
 
@@ -12,6 +12,8 @@ Applicazione Spring Boot per la gestione dei dipendenti, containerizzata con Doc
 - MySQL 8
 - Docker & Docker Compose
 - phpMyAdmin
+- Prometheus
+- Grafana
 
 ---
 
@@ -47,6 +49,10 @@ Servizio	         URL
 Spring Boot	      http://localhost:8080
 
 phpMyAdmin	      http://localhost:8081 -> Username: root Password: root
+
+Prometheus        http://localhost:9090
+
+Grafana           http://localhost:3000
 ```
 
 ---

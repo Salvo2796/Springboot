@@ -4,7 +4,6 @@ import com.azienda.jpa.entity.Account;
 import com.azienda.jpa.entity.TipoPermesso;
 import com.azienda.service.interfaces.PermessoService;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +16,11 @@ import java.util.List;
 @RequestMapping({ "crudPermesso" })
 public class ControllerPermesso {
 
-    @Autowired
-    private PermessoService ps;
+    private final PermessoService ps;
+
+    ControllerPermesso(PermessoService ps) {
+        this.ps = ps;
+    }
 
     @GetMapping(value = "/findByPermesso",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> findByPermesso(@RequestBody String request){
